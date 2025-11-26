@@ -1,0 +1,119 @@
+:host { display: block; }
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: linear-gradient(90deg, #f6f8fa 80%, #e0e7ef 100%);
+  border-bottom: 1px solid rgba(30, 136, 229, 0.08);
+  box-shadow: 0 2px 10px rgba(30, 136, 229, 0.06);
+  width: 100%;
+}
+
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 70px; /* Pinalaki */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px; /* Pinalaki */
+  transition: height 0.2s;
+}
+
+.brand {
+  font-weight: 800;
+  font-size: 1.6rem; /* Pinalaki */
+  color: #1e88e5;
+  text-decoration: none;
+  letter-spacing: 1.5px; /* Pinalaki */
+  transition: color .2s;
+}
+.brand:hover {
+  color: #347ecb;
+}
+
+.links {
+  display: flex;
+  gap: 44px; /* Pinalaki */
+  align-items: center;
+}
+.links a {
+  color: #144874;
+  text-decoration: none;
+  font-weight: 600;
+  opacity: .94;
+  font-size: 1.22rem; /* Pinalaki */
+  padding: 6px 0; /* Pinalaki */
+  transition: color .18s, opacity .18s;
+  border-bottom: 2.5px solid transparent;
+}
+.links a:hover,
+.links a.active {
+  color: #1e88e5;
+  text-decoration: none;
+  opacity: 1;
+  border-bottom: 2.5px solid #1e88e5;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .nav-inner {
+    max-width: 99vw;
+    padding: 0 14px;
+    height: 58px; /* Pinalaki */
+  }
+  .brand {
+    font-size: 1.3rem;
+  }
+  .links {
+    gap: 28px;
+  }
+  .links a {
+    font-size: 1.05rem;
+    padding: 4px 0;
+  }
+}
+
+/* Mobile: horizontal then vertical menu */
+@media (max-width: 600px) {
+  .nav-inner {
+    height: auto;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0 6vw;
+  }
+  .brand {
+    font-size: 1.13rem;
+    letter-spacing: .7px;
+    margin-bottom: 9px;
+  }
+  .links {
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+  .links a {
+    font-size: 1.05rem;
+    padding: 14px 0;
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid #e0e7ef;
+  }
+  .links a:last-child {
+    border-bottom: none;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 400px) {
+  .brand {
+    font-size: 1rem;
+  }
+  .links a {
+    font-size: 1rem;
+    padding: 10px 0;
+  }
+}

@@ -1,0 +1,40 @@
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #c3c9cc;
+
+  /* Force on top so nothing can cover it */
+  position: fixed;      /* was sticky */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2147483647;  /* extremely high */
+  pointer-events: auto;
+  isolation: isolate;   /* create a new stacking context */
+}
+
+.brand { font-weight: 700; }
+
+.nav a {
+  margin: 0 8px;
+  text-decoration: none;
+  color: #111;
+  padding: 6px 8px;
+  border-radius: 3px;
+
+  cursor: pointer;      /* show hand cursor */
+  pointer-events: auto; /* ensure link receives clicks */
+  display: inline-block;
+}
+
+.nav a.active { background: #e7ecef; }
+
+/* Add space so content doesn't sit under the fixed header */
+.content {
+  padding: 16px;
+  margin-top: 56px;     /* adjust if header height changes */
+  position: relative;
+  z-index: 1;
+}

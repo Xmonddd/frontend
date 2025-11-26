@@ -1,0 +1,67 @@
+<section class="auth-page">
+  <div class="auth-inner">
+    <div class="left-panel">
+      <div class="badge">Trusted preview</div>
+      <h1>Sign in to track your AI-powered health checks</h1>
+      <p class="lead">
+        Access saved assessments, monitor accuracy trends, and revisit care advice anytime.
+      </p>
+
+      <ul class="feature-list">
+        <li>
+          <div class="icon-circle">📊</div>
+          <div>
+            <h3>Smart insights</h3>
+            <p>See which conditions appear most often and how confident the model was.</p>
+          </div>
+        </li>
+        <li>
+          <div class="icon-circle">🛡️</div>
+          <div>
+            <h3>Red-flag alerts</h3>
+            <p>Saved reminders when symptoms require urgent medical attention.</p>
+          </div>
+        </li>
+        <li>
+          <div class="icon-circle">🗒️</div>
+          <div>
+            <h3>Care history</h3>
+            <p>Review treatment suggestions and personal notes from earlier checks.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <main class="auth-card" role="form">
+      <header class="card-head">
+        <div class="logo">AiHealthMate</div>
+        <p class="card-sub">Secure sign-in to continue</p>
+        <p class="info" *ngIf="info">{{ info }}</p>
+      </header>
+
+      <button
+        type="button"
+        class="oauth-btn"
+        (click)="google()"
+        [disabled]="loading">
+        <span class="oauth-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 48 48">
+            <path fill="#EA4335" d="M24 9.5c3.9 0 7.4 1.5 10.1 4l7.6-7.6C36.9 1.9 30.8 0 24 0 14.6 0 6.4 5.3 2.5 13l8.9 6.9C13.5 14.3 18.3 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.5 24.5c0-1.7-.2-3.3-.6-4.8H24v9.1h12.7c-.5 2.7-2 5-4.2 6.5l6.4 5c3.7-3.4 7.6-9 7.6-15.8z"/>
+            <path fill="#FBBC05" d="M11.4 28.9c-.6-1.7-1-3.6-1-5.4s.4-3.7 1-5.4l-8.9-6.9C.9 14.1 0 18 0 23.5S.9 32.9 2.5 37.3l8.9-6.9z"/>
+            <path fill="#34A853" d="M24 47c6.5 0 12-2.1 16-5.7l-6.4-5c-2.2 1.5-5 2.4-9.6 2.4-5.8 0-10.6-4.8-12.2-11.1l-8.9 6.9C6.4 42.7 14.6 47 24 47z"/>
+          </svg>
+        </span>
+        <span>{{ loading ? 'Signing in…' : 'Continue with Google' }}</span>
+        <span class="spinner" *ngIf="loading" aria-hidden="true"></span>
+      </button>
+
+      <p class="terms">
+        By signing in, you agree to the
+        <a routerLink="/terms">Terms of Use</a>
+        and
+        <a routerLink="/privacy">Privacy Policy</a>.
+      </p>
+    </main>
+  </div>
+</section>

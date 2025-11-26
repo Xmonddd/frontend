@@ -1,0 +1,306 @@
+<section class="symptoms-page">
+  <header class="page-hero">
+    <div class="hero-copy">
+      <p class="eyebrow">AiHealthMate</p>
+      <h1>Personalized Symptom Checker</h1>
+      <p class="subhead">
+        Track what you feel, add quick health context, and review AI-assisted insights in minutes.
+      </p>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <span class="stat-value">Step-by-step</span>
+        <span class="stat-label">Guided assessment</span>
+      </div>
+      <div>
+        <span class="stat-value">Secure</span>
+        <span class="stat-label">Your data stays private</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="step-progress" aria-label="Progress">
+    <ol>
+      <li *ngFor="let progress of PROGRESS" [class]="progressClass(progress)">
+        <span class="circle">{{ progress.step }}</span>
+        <div class="meta">
+          <span class="label">{{ progress.label }}</span>
+          <span class="description">{{ progress.description }}</span>
+        </div>
+      </li>
+    </ol>
+  </nav>
+
+  <div class="content-grid">
+    <article class="main-card">
+      <ng-container [ngSwitch]="step">
+
+        <!-- STEP 1 -->
+        <section class="panel" *ngSwitchCase="1">
+          <div class="step-header">
+            <h2>Describe your symptoms</h2>
+            <button
+              *ngIf="selectedSymptoms.length"
+              type="button"
+              class="link-clear"
+              (click)="clearSelected()">
+              Clear list
+            </button>
+          </div>
+          <p class="step-subtext">
+            Pick at least one symptom. Start typing to search, or tap a quick option below.
+          </p>
+
+          <div class="quick-choices" aria-label="Quick symptom choices">
+            <button class="chip quick-option" *ngFor="let s of POPULAR_SYMPTOMS" (click)="toggleSymptom(s)">
+              {{ s | lowercase }}
+            </button>
+          </div>
+
+          <div class="input-group">
+            <span class="input-icon" aria-hidden="true">🔍</span>
+            <input
+              #symInput
+              type="text"
+              [value]="inputText"
+              (focus)="onInputFocus()"
+              (input)="onInputChange(symInput.value)"
+              (keydown)="onInputKeydown($event)"
+              (blur)="onInputBlur()"
+              placeholder="Search for symptoms (e.g., cough, chest pain, rash)"
+              aria-label="Search and add symptoms"
+              [attr.aria-expanded]="showSuggestions"
+              aria-autocomplete="list"
+              aria-haspopup="listbox"
+              [attr.aria-controls]="'symptom-suggestions'"
+            />
+          </div>
+
+          <div
+            class="suggestions"
+            *ngIf="showSuggestions"
+            role="listbox"
+            id="symptom-suggestions">
+            <ul>
+              <li
+                *ngFor="let s of filteredSuggestions; let i = index"
+                role="option"
+                [attr.aria-selected]="i === activeIndex"
+                [class.active]="i === activeIndex"
+                (mousedown)="selectSuggestion(s)">
+                {{ s | lowercase }}
+              </li>
+              <li class="no-result" *ngIf="noResults" style="pointer-events: none; cursor: default;">
+                No matching symptom found.
+              </li>
+            </ul>
+          </div>
+
+          <div class="selected-wrap" *ngIf="selectedSymptoms.length">
+            <p class="selected-title">Selected symptoms</p>
+            <ul class="selected-list">
+              <li class="chip" *ngFor="let s of selectedSymptoms; let i = index">
+                <span>{{ s | titlecase }}</span>
+                <button
+                  type="button"
+                  class="chip-close"
+                  aria-label="Remove symptom"
+                  (click)="removeSymptom(i)">
+                  ×
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <div class="actions">
+            <button
+              class="btn primary"
+              type="button"
+              (click)="nextStep()"
+              [disabled]="loading || selectedSymptoms.length === 0">
+              Next step
+            </button>
+          </div>
+
+          <p class="error" *ngIf="error">{{ error }}</p>
+        </section>
+
+        <!-- STEP 2 -->
+        <section class="panel" *ngSwitchCase="2">
+          <div class="step-header">
+            <h2>Health background</h2>
+          </div>
+          <p class="step-subtext">
+            Optional details help tailor the guidance. You can skip or edit later.
+          </p>
+
+          <div class="card">
+            <div class="form-grid">
+              <div class="form-field">
+                <label for="age">Age</label>
+                <input
+                  id="age"
+                  type="number"
+                  min="0"
+                  inputmode="numeric"
+                  placeholder="e.g., 28"
+                  #ageInput
+                  [value]="age ?? ''"
+                  (input)="onAgeInput(ageInput.value)" />
+              </div>
+
+              <div class="form-field">
+                <label for="gender">Gender</label>
+                <select
+                  id="gender"
+                  #genderSelect
+                  [value]="gender"
+                  (change)="onGenderChange(genderSelect.value)">
+                  <option value="">Prefer not to say</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions between">
+            <button class="btn ghost" type="button" (click)="backToStep1()">Back</button>
+            <button class="btn primary" type="button" (click)="nextFromStep2()">Next step</button>
+          </div>
+        </section>
+
+        <!-- STEP 3 -->
+        <section class="panel" *ngSwitchCase="3">
+          <div class="step-header">
+            <h2>Review before analysis</h2>
+          </div>
+          <p class="step-subtext">Confirm the information below, then request AI analysis.</p>
+
+          <div class="review-card">
+            <h3>Symptoms</h3>
+            <ul class="chip-row">
+              <li class="chip small" *ngFor="let s of selectedSymptoms">
+                {{ s | titlecase }}
+              </li>
+            </ul>
+          </div>
+
+          <div class="review-card">
+            <h3>Health details</h3>
+            <div class="details-bar">
+              <div>
+                <span class="label">Age</span>
+                <span class="value">{{ age ?? 'Not provided' }}</span>
+              </div>
+              <div>
+                <span class="label">Gender</span>
+                <span class="value">{{ genderLabel() }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-banner">
+            <strong>AI-powered preview</strong>
+            <p>
+              We combine ML predictions with rule-based checks. Results are informational and
+              do not replace professional diagnosis.
+            </p>
+          </div>
+
+          <div class="actions between">
+            <button class="btn ghost" type="button" (click)="backToStep2()">Back</button>
+            <button
+              class="btn primary"
+              type="button"
+              (click)="analyze()"
+              [disabled]="loading">
+              {{ loading ? 'Analyzing...' : 'Analyze symptoms' }}
+            </button>
+          </div>
+
+          <p class="error" *ngIf="error">{{ error }}</p>
+        </section>
+
+        <!-- STEP 4 -->
+        <section class="panel results-panel" *ngSwitchCase="4">
+          <h2 class="results-heading">AI analysis complete</h2>
+
+          <div class="result-summary" *ngIf="result">
+            <div class="summary-card main">
+              <span class="summary-label">Top condition match</span>
+              <div class="summary-value">
+                {{ result.topCondition || 'No specific condition detected' }}
+              </div>
+            </div>
+            <div class="summary-card accuracy">
+              <span class="summary-label">Accuracy level</span>
+              <div class="summary-value">{{ result.accuracyLevel }}</div>
+              <p class="summary-note">{{ confidenceMessage() }}</p>
+            </div>
+          </div>
+
+          <section class="result-block">
+            <h3>Condition details</h3>
+            <p>
+              {{ result?.conditionDetails || 'Keep monitoring and seek medical advice if symptoms persist.' }}
+            </p>
+          </section>
+
+          <section class="result-block">
+            <h3>Treatment options</h3>
+            <p>
+              {{ result?.treatment || 'No treatments suggested for this result.' }}
+            </p>
+          </section>
+
+          <section class="result-block">
+            <h3>General advice</h3>
+            <p>{{ result?.advice }}</p>
+          </section>
+
+          <section class="result-block highlight">
+            <h3>Care tips</h3>
+            <p>{{ careTips() }}</p>
+          </section>
+
+          <section class="result-block warning" *ngIf="hasRedFlags()">
+            <h3>Red flag alerts</h3>
+            <ul>
+              <li *ngFor="let flag of result?.redFlags">{{ flag }}</li>
+            </ul>
+          </section>
+
+          <div class="actions results-actions">
+            <button type="button" class="btn ghost" (click)="onGetResult()">Save to history</button>
+            <button type="button" class="btn primary" (click)="startNew()">Start new check</button>
+          </div>
+
+          <p class="error" *ngIf="error">{{ error }}</p>
+
+          <div class="disclaimer" role="note" aria-label="Disclaimer">
+            ⚠️ <strong>Disclaimer:</strong> AiHealthMate results are generated via AI and are for informational purposes only. Always consult a qualified healthcare professional for diagnosis and treatment.
+          </div>
+        </section>
+
+      </ng-container>
+    </article>
+
+    <aside class="support-card">
+      <h3>How it works</h3>
+      <ol class="support-list">
+        <li>Select or search symptoms from our curated glossary.</li>
+        <li>Add optional health context for tailored recommendations.</li>
+        <li>Review AI-generated condition insights, treatment ideas, and care tips.</li>
+      </ol>
+      <div class="support-box">
+        <h4>Urgent warning</h4>
+        <p>If you experience severe pain, difficulty breathing, or sudden weakness, call emergency services immediately.</p>
+      </div>
+      <p class="support-footer">
+        AiHealthMate is educational and does not replace professional medical assessment.
+      </p>
+    </aside>
+  </div>
+</section>

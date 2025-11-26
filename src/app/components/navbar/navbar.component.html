@@ -1,0 +1,19 @@
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" routerLink="/">AiHealthMate</a>
+    <nav class="links" aria-label="primary">
+      <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+      <a routerLink="/symptoms" routerLinkActive="active">Symptoms Checker</a>
+      <a routerLink="/about" routerLinkActive="active">About</a>
+
+      <ng-container *ngIf="(auth.user$ | async) as user; else guest">
+        <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+        <a routerLink="/logout">Logout</a>
+      </ng-container>
+      <ng-template #guest>
+        <a routerLink="/login" routerLinkActive="active">Login/Sign Up</a>
+        <a routerLink="/signup" routerLinkActive="active">Sign up</a>
+      </ng-template>
+    </nav>
+  </div>
+</header>

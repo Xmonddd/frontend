@@ -1,0 +1,28 @@
+{
+  "scripts": {
+    "start": "ng serve --proxy-config proxy.conf.json",
+    "build": "ng build --configuration production",
+    "watch": "ng build --watch --configuration development",
+    "typecheck": "tsc -p tsconfig.app.json --noEmit",
+    "typecheck:watch": "tsc -p tsconfig.app.json --noEmit --watch",
+    "lint": "ng lint"
+  },
+  "dependencies": {
+    "@angular/common": "^17.3.12",
+    "@angular/compiler": "^17.3.12",
+    "@angular/core": "^17.3.12",
+    "@angular/forms": "^17.3.12",
+    "@angular/platform-browser": "^17.3.12",
+    "@angular/platform-browser-dynamic": "^17.3.12",
+    "@angular/router": "^17.3.12",
+    "@supabase/supabase-js": "^2.78.0",
+    "zone.js": "^0.14.3"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^17.3.6",
+    "@angular/compiler-cli": "^17.3.12",
+    "@types/node": "^24.10.0",
+    "typescript": "^5.4.5",
+    "vercel": "^48.10.14"
+  }
+}
